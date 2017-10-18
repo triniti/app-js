@@ -1,0 +1,29 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "globals": {
+    "document": true,
+    "window": true,
+    "APP_ENV": false,
+    "APP_VENDOR": false,
+    "APP_NAME": false,
+    "APP_VERSION": false,
+    "APP_BUILD": false,
+    "APP_DEPLOYMENT_ID": false,
+    "APP_DEV_BRANCH": false,
+    "PBJX_ENDPOINT": false
+  },
+  "env": {
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+    "jsx-a11y/href-no-hash": "off"
+  }
+}
