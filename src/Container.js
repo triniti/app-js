@@ -1,7 +1,7 @@
 import EntryNotFound from './exceptions/EntryNotFound';
 import LogicException from './exceptions/LogicException';
 
-const privateProps = new WeakMap();
+const instances = new WeakMap();
 
 /**
  * Provides a simple api wrapping a bottlejs instance.
@@ -16,7 +16,7 @@ export default class Container {
    */
   constructor(bottle) {
     const instance = { bottle };
-    privateProps.set(this, instance);
+    instances.set(this, instance);
   }
 
   /**
@@ -35,7 +35,7 @@ export default class Container {
     }
 
     try {
-      return privateProps.get(this).bottle.container[id];
+      return instances.get(this).bottle.container[id];
     } catch (e) {
       throw new LogicException(`Error while retrieving the entry [${id}] from the container. ${e.message}`);
     }
@@ -53,7 +53,7 @@ export default class Container {
    * @returns {boolean}
    */
   has(id) {
-    const { bottle } = privateProps.get(this);
+    const { bottle } = instances.get(this);
     if (bottle.providerMap[id]) {
       return true;
     }

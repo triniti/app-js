@@ -7,7 +7,7 @@ import { INJECT } from '../constants';
  *
  * @param {Container} container
  *
- * @returns {function}
+ * @returns {Function}
  */
 export default container => ({ dispatch, getState }) => next => (action) => {
   if (typeof action !== 'function') {

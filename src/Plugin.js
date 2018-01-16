@@ -1,24 +1,26 @@
 /* eslint-disable no-unused-vars, class-methods-use-this */
-export default class Plugin {
+import EventSubscriber from '@gdbots/pbjx/EventSubscriber';
+
+export default class Plugin extends EventSubscriber {
   /**
    * @param {string} vendor
    * @param {string} name
    * @param {string} version
    */
   constructor(vendor, name, version) {
+    super();
     Object.defineProperty(this, 'vendor', { value: vendor });
     Object.defineProperty(this, 'name', { value: name });
     Object.defineProperty(this, 'version', { value: version });
 
     /**
      * A routes object with structure:
-     * routeName: routeObject{}
-     *
-     * @example route
+     * @example
      *  '@triniti/iam/list_roles': {
      *    path: '/iam/roles',
-     *    component: ListAllRolesScreen,
+     *    component: () => import('./path/to/ListAllRolesScreen'), // lazy with dynamic import
      *    exact: true, // optional, default: true
+     *    lazy: true // optional, default: true
      *    strict: false, // optional, default: false
      *    public: false, // optional, default: false
      *  },
@@ -110,20 +112,6 @@ export default class Plugin {
    * @param {Bottle} bottle
    */
   configure(app, bottle) {
-    // override in concrete plugin
-  }
-
-  /**
-   * @param {App} app
-   */
-  start(app) {
-    // override in concrete plugin
-  }
-
-  /**
-   * @param {App} app
-   */
-  stop(app) {
     // override in concrete plugin
   }
 

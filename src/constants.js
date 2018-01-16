@@ -10,8 +10,9 @@ const t = id => `${SERVICE_PREFIX}${id}`;
  */
 export const serviceIds = {
   PREFIX: SERVICE_PREFIX,
-  APP: t('app'),
+  INSTANCE: t('instance'),
   CONTAINER: t('container'),
+  DISPATCHER: t('dispatcher'),
   REDUX_STORE: t('redux/store'),
 };
 
@@ -22,9 +23,15 @@ export const serviceIds = {
  */
 export const actionTypes = {
   PREFIX: SERVICE_PREFIX,
-  APP_STARTED: t('APP_STARTED'),
-  APP_STOPPED: t('APP_STOPPED'),
+  APP_STARTED: t('app_started'),
 };
+
+/**
+ * Suffixes are typically used by {@see Pbjx.trigger}
+ *
+ * @see {BindReduxFormEvent}
+ */
+export const SUFFIX_BIND_REDUX_FORM = 'bind_redux_form';
 
 /**
  * The Ioc middleware in "./redux/createInjectMiddleware.js" requires that a

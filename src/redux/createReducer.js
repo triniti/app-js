@@ -9,7 +9,7 @@ import InvalidArgumentException from '../exceptions/InvalidArgumentException';
  * @param {*}      initialState - The initial state for this reducer.
  * @param {Object} handlers     - Keys are action types (strings), values are reducers (functions).
  *
- * @returns {function} a reducer function
+ * @returns {Function} a reducer function
  *
  * @throws {InvalidArgumentException}
  */

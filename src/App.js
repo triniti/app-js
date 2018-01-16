@@ -7,34 +7,32 @@
   APP_DEPLOYMENT_ID,
   APP_DEV_BRANCH
 */
-/* eslint-disable no-unused-vars, class-methods-use-this */
+/* eslint-disable no-unused-vars, class-methods-use-this, max-len */
 import { serviceIds as pbjxServiceIds } from '@gdbots/pbjx/constants';
+import Dispatcher from '@gdbots/pbjx/Dispatcher';
+import EventSubscriber from '@gdbots/pbjx/EventSubscriber';
 import Bottle from 'bottlejs';
 import Container from './Container';
 import LogicException from './exceptions/LogicException';
 import configurePbjx from './pbjx/configurePbjx';
 import createStore from './redux/createStore';
-import { serviceIds } from './constants';
-import actions from './actions';
+import { actionTypes, serviceIds } from './constants';
 
-const privateProps = new WeakMap();
+const instances = new WeakMap();
 
-export default class App {
+export default class App extends EventSubscriber {
   /**
    * @param {Plugin[]} plugins
    * @param {Object}   preloadedState
    * @param {Function} pbjxConfigurator - Function signature (app, bottle)
    * @param {Function} storeCreator - Function signature (app, bottle), returns a reduxStore
    */
-  constructor(
-    plugins = [],
-    preloadedState = {},
-    pbjxConfigurator = configurePbjx,
-    storeCreator = createStore,
-  ) {
-    const app = {
+  constructor(plugins = [], preloadedState = {}, pbjxConfigurator = configurePbjx, storeCreator = createStore) {
+    super();
+    const instance = {
       bottle: new Bottle(),
       container: null,
+      dispatcher: new Dispatcher(),
       plugins: new Map(),
       preloadedState,
       pbjxConfigurator,
@@ -44,7 +42,8 @@ export default class App {
       running: false,
     };
 
-    plugins.map(plugin => app.plugins.set(plugin.getName(), plugin));
+    instances.set(this, instance);
+    instance.container = new Container(instance.bottle);
 
     /*
      * Constants should NEVER change and cannot be decorated.
@@ -52,111 +51,46 @@ export default class App {
      * injectable and used as a standard method of access.
      */
     const appEnv = APP_ENV || 'dev';
-    app.bottle.constant('app_env', appEnv);
-    app.bottle.constant('app_vendor', APP_VENDOR);
-    app.bottle.constant('app_name', APP_NAME);
-    app.bottle.constant('app_version', APP_VERSION);
-    app.bottle.constant('app_build', APP_BUILD);
-    app.bottle.constant('app_deployment_id', APP_DEPLOYMENT_ID);
-    app.bottle.constant('app_dev_branch', APP_DEV_BRANCH);
-    app.bottle.constant(`is_${appEnv}_environment`, true);
-    app.bottle.constant('is_production', appEnv === 'prod' || appEnv === 'production');
-    app.bottle.constant('is_not_production', !app.bottle.container.is_production);
+    instance.bottle.constant('app_env', appEnv);
+    instance.bottle.constant('app_vendor', APP_VENDOR);
+    instance.bottle.constant('app_name', APP_NAME);
+    instance.bottle.constant('app_version', APP_VERSION);
+    instance.bottle.constant('app_build', APP_BUILD);
+    instance.bottle.constant('app_deployment_id', APP_DEPLOYMENT_ID);
+    instance.bottle.constant('app_dev_branch', APP_DEV_BRANCH);
+    instance.bottle.constant(`is_${appEnv}_environment`, true);
+    instance.bottle.constant('is_production', appEnv === 'prod' || appEnv === 'production');
+    instance.bottle.constant('is_not_production', !instance.bottle.container.is_production);
 
-    app.bottle.factory(serviceIds.APP, () => this);
-    app.bottle.factory(serviceIds.CONTAINER, () => this.getContainer());
+    instance.bottle.factory(serviceIds.INSTANCE, () => this);
+    instance.bottle.factory(serviceIds.CONTAINER, () => instance.container);
+    instance.bottle.factory(serviceIds.DISPATCHER, () => instance.dispatcher);
 
-    privateProps.set(this, app);
+    instance.dispatcher.addSubscriber(this);
+    plugins.forEach((plugin) => {
+      instance.plugins.set(plugin.getName(), plugin);
+      instance.dispatcher.addSubscriber(plugin);
+    });
   }
 
   /**
-   * Returns the container will access to all services
+   * Returns the container with access to all services
    * and parameters for this app instance.
    *
    * @returns {Container}
    */
   getContainer() {
-    const app = privateProps.get(this);
-
-    if (!app.container) {
-      app.container = new Container(app.bottle);
-    }
-
-    return app.container;
+    return instances.get(this).container;
   }
 
   /**
-   * Runs the "start" routine on the app:
-   *
-   * - configures pbjx services using pbjxConfigurator
-   * - calls "configure" on all plugins
-   * - calls "configure" on the app instance
-   * - creates the store using the storeCreator
-   * - calls "start" on all plugins
-   * - aggregates all routes from all plugins to this instance.
-   *
-   * Calling "start" when the app is already running is a noop.
-   *
-   * @returns {App}
+   * @returns {Dispatcher}
    */
-  start() {
-    const app = privateProps.get(this);
-    if (app.running) {
-      return this;
-    }
-
-    // todo: wrap the provided bottle so we can make it immutable after configure
-    app.pbjxConfigurator(this, app.bottle);
-    app.plugins.forEach(plugin => plugin.configure(this, app.bottle));
-    this.configure(app.bottle);
-    app.store = app.storeCreator(this, app.bottle);
-    app.running = true;
-
-    app.plugins.forEach((plugin) => {
-      plugin.start(this);
-      app.routes = Object.assign(app.routes, plugin.getRoutes());
-    });
-
-    app.store.dispatch(actions.startApp());
-
-    return this;
+  getDispatcher() {
+    return instances.get(this).dispatcher;
   }
 
   /**
-   * Stops the app, resets the container, clears routes and
-   * dumps the current state to the preloadedState.
-   *
-   * @returns {App}
-   */
-  stop() {
-    const app = privateProps.get(this);
-    if (!app.running) {
-      return this;
-    }
-
-    app.plugins.forEach(plugin => plugin.stop(this));
-    app.preloadedState = app.store.getState();
-    app.store.dispatch(actions.stopApp());
-    app.store = null;
-    app.bottle.resetProviders();
-    app.routes = {};
-    app.running = false;
-
-    return this;
-  }
-
-  /**
-   * Returns the preloaded state the app was instantiated with.
-   *
-   * @returns {Object}
-   */
-  getPreloadedState() {
-    return privateProps.get(this).preloadedState || {};
-  }
-
-  /**
-   * Returns the app (Pbjx) service.
-   *
    * @returns {Pbjx}
    */
   getPbjx() {
@@ -171,12 +105,12 @@ export default class App {
    * @throws {LogicException}
    */
   getStore() {
-    const app = privateProps.get(this);
-    if (!app.running) {
+    const instance = instances.get(this);
+    if (!instance.running) {
       throw new LogicException('The app store has not been created yet.');
     }
 
-    return app.store;
+    return instance.store;
   }
 
   /**
@@ -186,7 +120,7 @@ export default class App {
    * @returns {Object}
    */
   getRoutes() {
-    return privateProps.get(this).routes;
+    return instances.get(this).routes;
   }
 
   /**
@@ -195,31 +129,14 @@ export default class App {
    * @returns {boolean}
    */
   hasPlugin(pluginName) {
-    return privateProps.get(this).plugins.has(pluginName);
-  }
-
-  /**
-   * @param {Plugin} plugin
-   *
-   * @returns {App}
-   *
-   * @throws {LogicException}
-   */
-  addPlugin(plugin) {
-    const app = privateProps.get(this);
-    if (app.running) {
-      throw new LogicException('App is already running.  No more plugins can be added.');
-    }
-
-    app.plugins.set(plugin.getName(), plugin);
-    return this;
+    return instances.get(this).plugins.has(pluginName);
   }
 
   /**
    * @returns {Plugin[]}
    */
   getPlugins() {
-    return Array.from(privateProps.get(this).plugins.values());
+    return Array.from(instances.get(this).plugins.values());
   }
 
   /**
@@ -230,13 +147,49 @@ export default class App {
   }
 
   /**
+   * Runs the "start" routine on the app:
+   *
+   * - configures pbjx services using pbjxConfigurator
+   * - configures all plugins
+   *   - calls "configure" on the plugin instance
+   *   - merges routes from plugin to app
+   * - calls "configure" on the app instance
+   * - creates the store using the storeCreator
+   * - dispatches the "APP_STARTED" redux action
+   *
+   * Calling "start" when the app is already running is a noop.
+   *
+   * @returns {App}
+   */
+  start() {
+    const instance = instances.get(this);
+    if (instance.running) {
+      return this;
+    }
+
+    // todo: wrap the provided bottle so we can make it immutable after configure
+    instance.pbjxConfigurator(this, instance.bottle);
+    instance.plugins.forEach((plugin) => {
+      plugin.configure(this, instance.bottle);
+      instance.routes = Object.assign(instance.routes, plugin.getRoutes());
+    });
+
+    this.configure(instance.bottle);
+    instance.store = instance.storeCreator(this, instance.bottle, instance.preloadedState);
+    instance.running = true;
+    instance.store.dispatch({ type: actionTypes.APP_STARTED });
+
+    return this;
+  }
+
+  /**
    * @returns {Object}
    */
   toJSON() {
-    const app = privateProps.get(this);
+    const instance = instances.get(this);
     return {
       plugins: this.getPlugins().map(String),
-      container: app.bottle.container.$list(),
+      container: instance.bottle.container.$list(),
     };
   }
 

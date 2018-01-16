@@ -8,15 +8,17 @@ import createSagaMiddleware from 'redux-saga';
 import { all, fork } from 'redux-saga/effects';
 import logger from 'redux-logger';
 import createInjectMiddleware from './createInjectMiddleware';
+import createInterceptorMiddleware from './createInterceptorMiddleware';
 import { serviceIds } from '../constants';
 
 /**
  * @param {App} app
  * @param {Bottle} bottle
+ * @param {Object} preloadedState
  *
  * @returns {Store}
  */
-export default (app, bottle) => {
+export default (app, bottle, preloadedState) => {
   const container = app.getContainer();
   const reducers = {};
   const sagas = [];
@@ -37,7 +39,12 @@ export default (app, bottle) => {
   const rootReducer = Object.keys(reducers).length
     ? reduceReducers(combineReducers(reducers), pbjxReducer)
     : pbjxReducer;
-  const middlewares = [createPbjxMiddleware(app.getPbjx()), createInjectMiddleware(container)];
+
+  const middlewares = [
+    createInterceptorMiddleware(app),
+    createPbjxMiddleware(app.getPbjx()),
+    createInjectMiddleware(container),
+  ];
 
   let sagaMiddleware;
   if (sagas) {
@@ -53,12 +60,12 @@ export default (app, bottle) => {
   // eslint-disable-next-line no-underscore-dangle
   const composer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const enhancer = composer(applyMiddleware(...middlewares));
-  const store = createReduxStore(rootReducer, app.getPreloadedState(), enhancer);
+  const store = createReduxStore(rootReducer, preloadedState, enhancer);
   bottle.factory(serviceIds.REDUX_STORE, () => store);
 
   if (sagaMiddleware) {
     const rootSaga = function* createRootSaga() {
-      yield all(sagas.map(saga => fork(saga, container)));
+      yield all(sagas.map(saga => fork(saga, app)));
     };
     sagaMiddleware.run(rootSaga);
   }

@@ -23,6 +23,8 @@ export default (app, bottle) => {
     pbjxServiceIds.LOCATOR,
     pbjxServiceIds.TRANSPORT_HTTP_ENDPOINT,
   );
+
   bottle.service(pbjxServiceIds.PBJX, Pbjx, pbjxServiceIds.LOCATOR);
+  bottle.factory(pbjxServiceIds.DISPATCHER, () => app.getDispatcher());
   bottle.factory(pbjxServiceIds.REDUX_REDUCER, () => createReducer());
 };
