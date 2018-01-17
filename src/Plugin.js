@@ -116,6 +116,13 @@ export default class Plugin extends EventSubscriber {
   }
 
   /**
+   * @param {App} app
+   */
+  start(app) {
+    // override in concrete plugin
+  }
+
+  /**
    * @returns {string}
    */
   toJSON() {

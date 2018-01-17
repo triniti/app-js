@@ -22,6 +22,7 @@ const createApp = () => {
   const testPlugin = new TestPlugin();
   const app = new App([testPlugin], { test: { lastAction: null } });
   app.start();
+  testPlugin.start(app);
   return app;
 };
 

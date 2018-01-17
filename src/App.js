@@ -150,11 +150,11 @@ export default class App extends EventSubscriber {
    * Runs the "start" routine on the app:
    *
    * - configures pbjx services using pbjxConfigurator
-   * - configures all plugins
-   *   - calls "configure" on the plugin instance
-   *   - merges routes from plugin to app
+   * - calls "configure" on all plugins
    * - calls "configure" on the app instance
    * - creates the store using the storeCreator
+   * - calls "start" on all plugins
+   * - aggregates all routes from all plugins to this instance.
    * - dispatches the "APP_STARTED" redux action
    *
    * Calling "start" when the app is already running is a noop.
@@ -169,14 +169,16 @@ export default class App extends EventSubscriber {
 
     // todo: wrap the provided bottle so we can make it immutable after configure
     instance.pbjxConfigurator(this, instance.bottle);
-    instance.plugins.forEach((plugin) => {
-      plugin.configure(this, instance.bottle);
-      instance.routes = Object.assign(instance.routes, plugin.getRoutes());
-    });
-
+    instance.plugins.forEach(plugin => plugin.configure(this, instance.bottle));
     this.configure(instance.bottle);
     instance.store = instance.storeCreator(this, instance.bottle, instance.preloadedState);
     instance.running = true;
+
+    instance.plugins.forEach((plugin) => {
+      plugin.start(this);
+      instance.routes = Object.assign(instance.routes, plugin.getRoutes());
+    });
+
     instance.store.dispatch({ type: actionTypes.APP_STARTED });
 
     return this;
