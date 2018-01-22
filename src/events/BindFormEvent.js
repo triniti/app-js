@@ -4,7 +4,7 @@ import PbjxEvent from '@gdbots/pbjx/events/PbjxEvent';
 const formNameSym = Symbol('formName');
 const formDataSym = Symbol('formData');
 
-export default class BindReduxFormEvent extends PbjxEvent {
+export default class BindFormEvent extends PbjxEvent {
   /**
    * @param {Message} message
    * @param {string} formName

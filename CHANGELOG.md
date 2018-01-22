@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## v0.3.0
+* Add `createDelegateFactory.js` which is used to create a delegate for a connected component.  The delegate can use the `INJECT` symbol to have any dependencies injected.
+* Change `BindReduxFormEvent` to just `BindFormEvent` as it can be used with forms that aren't necessarily redux forms.
+* Moved all files in `redux/*` and `pbjx/*` to root.  It's a pbjx+redux app so separating these out doesn't make a lot of sense.
+* Add `selectors/getForm` for grabbing a complete view of a redux form and `utils/touchErrorFields` which forces inline validation to show up on a redux form.
+
+
 ## v0.2.1
 * Restore the "start" plugin hook.  It's useful for allowing plugins to first configure themselves, potentially the app customizing that and later the start method using the final configuration.
 

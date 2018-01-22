@@ -1,5 +1,5 @@
 import isPlainObject from 'lodash/isPlainObject';
-import FilterActionEvent from '../events/FilterActionEvent';
+import FilterActionEvent from './events/FilterActionEvent';
 
 /**
  * Creates an interceptor middleware to allow filtering of actions

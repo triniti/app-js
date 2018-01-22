@@ -14,8 +14,8 @@ import EventSubscriber from '@gdbots/pbjx/EventSubscriber';
 import Bottle from 'bottlejs';
 import Container from './Container';
 import LogicException from './exceptions/LogicException';
-import configurePbjx from './pbjx/configurePbjx';
-import createStore from './redux/createStore';
+import configurePbjx from './configurePbjx';
+import createStore from './createStore';
 import { actionTypes, serviceIds } from './constants';
 
 const instances = new WeakMap();

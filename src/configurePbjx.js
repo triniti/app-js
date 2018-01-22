@@ -4,7 +4,7 @@ import ContainerAwareServiceLocator from '@gdbots/pbjx/ContainerAwareServiceLoca
 import HttpTransport from '@gdbots/pbjx/transports/HttpTransport';
 import Pbjx from '@gdbots/pbjx/Pbjx';
 import createReducer from '@gdbots/pbjx/redux/createReducer';
-import { serviceIds } from '../constants';
+import { serviceIds } from './constants';
 
 /**
  * @param {App} app

@@ -23,15 +23,15 @@ export const serviceIds = {
  */
 export const actionTypes = {
   PREFIX: SERVICE_PREFIX,
-  APP_STARTED: t('app_started'),
+  APP_STARTED: t('APP_STARTED'),
 };
 
 /**
  * Suffixes are typically used by {@see Pbjx.trigger}
  *
- * @see {BindReduxFormEvent}
+ * @see {BindFormEvent}
  */
-export const SUFFIX_BIND_REDUX_FORM = 'bind_redux_form';
+export const SUFFIX_BIND_FORM = 'bind_form';
 
 /**
  * The Ioc middleware in "./redux/createInjectMiddleware.js" requires that a

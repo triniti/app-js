@@ -1,6 +1,6 @@
 {
   "name": "@triniti/app",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Lightweight container for redux + pbjx app.",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "lodash": "^4.17.4",
     "lodash-es": "^4.17.4",
     "redux": "^3.7.2",
-    "redux-form": "^7.1.1",
+    "redux-form": "^7.2.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "~0.15"
   },
@@ -50,7 +50,7 @@
     "babel-register": "^6.26.0",
     "babel-tape-runner": "^2.0.1",
     "bottlejs": "^1.6.3",
-    "eslint": "^4.15.0",
+    "eslint": "^4.16.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
@@ -64,7 +64,7 @@
     "react": "^16.2.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "redux-form": "^7.2.0",
+    "redux-form": "^7.2.1",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "rimraf": "^2.6.2",

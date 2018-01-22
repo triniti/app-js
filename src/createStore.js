@@ -9,7 +9,7 @@ import { all, fork } from 'redux-saga/effects';
 import logger from 'redux-logger';
 import createInjectMiddleware from './createInjectMiddleware';
 import createInterceptorMiddleware from './createInterceptorMiddleware';
-import { serviceIds } from '../constants';
+import { serviceIds } from './constants';
 
 /**
  * @param {App} app

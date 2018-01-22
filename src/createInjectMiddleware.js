@@ -1,4 +1,4 @@
-import { INJECT } from '../constants';
+import { INJECT } from './constants';
 
 /**
  * Creates a redux middleware that injects a function's dependencies
