@@ -1,7 +1,7 @@
 # CHANGELOG
 
 
-# v0.3.1
+## v0.3.1
 * Adding application `APP_BASE_URL` setting to define your application's base url.
 
 
