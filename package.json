@@ -1,6 +1,6 @@
 {
   "name": "@triniti/app",
-  "version": "0.3.2",
+  "version": "0.3.1",
   "description": "Lightweight container for redux + pbjx app.",
   "repository": {
     "type": "git",
