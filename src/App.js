@@ -1,7 +1,7 @@
 /* globals
   APP_ENV,
   APP_BUILD,
-  APP_BASE_PATH,
+  APP_BASE_URL,
   APP_DEPLOYMENT_ID,
   APP_DEV_BRANCH,
   APP_NAME,
@@ -53,7 +53,7 @@ export default class App extends EventSubscriber {
      */
     const appEnv = APP_ENV || 'dev';
     instance.bottle.constant('app_env', appEnv);
-    instance.bottle.constant('app_base_path', APP_BASE_PATH);
+    instance.bottle.constant('app_base_url', APP_BASE_URL);
     instance.bottle.constant('app_build', APP_BUILD);
     instance.bottle.constant('app_deployment_id', APP_DEPLOYMENT_ID);
     instance.bottle.constant('app_dev_branch', APP_DEV_BRANCH);
