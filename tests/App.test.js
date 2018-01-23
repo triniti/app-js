@@ -9,13 +9,14 @@ import TestPlugin from './fixtures/TestPlugin';
  * @returns {App}
  */
 const createApp = () => {
-  global.APP_ENV = 'test';
-  global.APP_VENDOR = 'acme';
-  global.APP_NAME = 'test';
-  global.APP_VERSION = 'vN.N.N';
+  global.APP_BASE_URL = '/';
   global.APP_BUILD = 'YYYYMMDDHHSS';
+  global.APP_ENV = 'test';
   global.APP_DEPLOYMENT_ID = 'YYYYMMDDHHSSID';
   global.APP_DEV_BRANCH = 'master';
+  global.APP_NAME = 'test';
+  global.APP_VENDOR = 'acme';
+  global.APP_VERSION = 'vN.N.N';
   global.PBJX_ENDPOINT = 'https://localhost/pbjx';
   global.window = {};
 

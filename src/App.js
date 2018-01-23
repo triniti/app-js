@@ -57,11 +57,11 @@ export default class App extends EventSubscriber {
     instance.bottle.constant('app_build', APP_BUILD);
     instance.bottle.constant('app_deployment_id', APP_DEPLOYMENT_ID);
     instance.bottle.constant('app_dev_branch', APP_DEV_BRANCH);
-    instance.bottle.constant(`is_${appEnv}_environment`, true);
-    instance.bottle.constant('is_production', appEnv === 'prod' || appEnv === 'production');
     instance.bottle.constant('app_name', APP_NAME);
     instance.bottle.constant('app_vendor', APP_VENDOR);
     instance.bottle.constant('app_version', APP_VERSION);
+    instance.bottle.constant(`is_${appEnv}_environment`, true);
+    instance.bottle.constant('is_production', appEnv === 'prod' || appEnv === 'production');
 
     instance.bottle.constant('is_not_production', !instance.bottle.container.is_production);
 
