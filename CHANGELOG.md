@@ -1,6 +1,10 @@
 # CHANGELOG
 
 
+# v0.3.1
+* Adding application `APP_BASE_URL` setting to define your application's base url.
+
+
 ## v0.3.0
 * Add `createDelegateFactory.js` which is used to create a delegate for a connected component.  The delegate can use the `INJECT` symbol to have any dependencies injected.
 * Change `BindReduxFormEvent` to just `BindFormEvent` as it can be used with forms that aren't necessarily redux forms.
