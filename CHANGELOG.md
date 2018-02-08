@@ -1,6 +1,10 @@
 # CHANGELOG
 
 
+## v0.4.1
+* Fix invalid empty check on errors and warnings in `FormEvent`.
+
+
 ## v0.4.0
 __BREAKING CHANGES__
 

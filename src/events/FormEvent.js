@@ -49,7 +49,7 @@ export default class FormEvent extends PbjxEvent {
    * @returns {boolean}
    */
   hasErrors() {
-    return isEmpty(this[errorsSym]);
+    return !isEmpty(this[errorsSym]);
   }
 
   /**
@@ -74,7 +74,7 @@ export default class FormEvent extends PbjxEvent {
    * @returns {boolean}
    */
   hasWarnings() {
-    return isEmpty(this[warningsSym]);
+    return !isEmpty(this[warningsSym]);
   }
 
   /**
