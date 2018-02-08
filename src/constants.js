@@ -29,12 +29,15 @@ export const actionTypes = {
 /**
  * Suffixes are typically used by {@see Pbjx.trigger}
  *
- * @see {BindFormEvent}
+ * @see {FormEvent}
  */
+export const SUFFIX_INIT_FORM = 'init_form';
+export const SUFFIX_WARN_FORM = 'warn_form';
+export const SUFFIX_VALIDATE_FORM = 'validate_form';
 export const SUFFIX_BIND_FORM = 'bind_form';
 
 /**
- * The Ioc middleware in "./redux/createInjectMiddleware.js" requires that a
+ * The Ioc middleware in "createInjectMiddleware.js" requires that a
  * symbol be added to any dispatched thunk that requires dependency injection.
  *
  * @example

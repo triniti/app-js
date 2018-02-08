@@ -62,7 +62,6 @@ export default class App extends EventSubscriber {
     instance.bottle.constant('app_version', APP_VERSION);
     instance.bottle.constant(`is_${appEnv}_environment`, true);
     instance.bottle.constant('is_production', appEnv === 'prod' || appEnv === 'production');
-
     instance.bottle.constant('is_not_production', !instance.bottle.container.is_production);
 
     instance.bottle.factory(serviceIds.INSTANCE, () => this);
@@ -176,12 +175,15 @@ export default class App extends EventSubscriber {
     this.configure(instance.bottle);
     instance.store = instance.storeCreator(this, instance.bottle, instance.preloadedState);
     instance.running = true;
+    const subscribers = [];
 
     instance.plugins.forEach((plugin) => {
       plugin.start(this);
       instance.routes = Object.assign(instance.routes, plugin.getRoutes());
+      subscribers.push(...plugin.getSubscriberServices());
     });
 
+    subscribers.forEach(serviceId => instance.dispatcher.addSubscriber(instance.container.get(serviceId)));
     instance.store.dispatch({ type: actionTypes.APP_STARTED });
 
     return this;

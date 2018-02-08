@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.4.0
+__BREAKING CHANGES__
+
+* Move `selectors/getForm` and `utils/touchErrorFields` to `@triniti/redux-form-plugin`.
+* Add method `getSubscriberServices` to `Plugin` which should return an array of service ids that will automatically be added as event subscribers to the app dispatcher.
+* Delete the deprecated `redux/createReducer` file.
+* Always pass the pbjx service as a dependency when using the `createDelegateFactory`.
+* Rename `BindFormEvent` to `FormEvent` so we can reuse this for various form lifecycle events (init, bind, warn, validate, etc.).
+
+
 ## v0.3.1
 * Adding application `APP_BASE_URL` setting to define your application's base url.
 

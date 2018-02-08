@@ -123,6 +123,17 @@ export default class Plugin extends EventSubscriber {
   }
 
   /**
+   * Returns an array of strings which are service ids.
+   * These services will automatically be added as subscribers
+   * to the app's dispatcher when the app starts.
+   *
+   * @returns {string[]}
+   */
+  getSubscriberServices() {
+    return [];
+  }
+
+  /**
    * @returns {string}
    */
   toJSON() {

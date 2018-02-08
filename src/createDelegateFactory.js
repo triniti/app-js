@@ -12,6 +12,8 @@ import { INJECT } from './constants';
  * in the third argument to the factory.
  * const factory = (dispatch, ownProps, dependencies) => {}
  *
+ * NOTE: pbjx service is always available.
+ *
  * @link https://en.wikipedia.org/wiki/Delegation_pattern
  *
  * @param {Function} factory - a function that creates the delegate
@@ -20,16 +22,17 @@ import { INJECT } from './constants';
  */
 export default factory => (dispatch, ownProps) => {
   const effectiveFactory = (ownProps && ownProps.delegate) || factory;
+  const app = getInstance();
 
   if (!effectiveFactory[INJECT]) {
-    return { delegate: effectiveFactory(dispatch, ownProps) };
+    return { delegate: effectiveFactory(dispatch, ownProps, { pbjx: app.getPbjx() }) };
   }
 
-  const container = getInstance().getContainer();
+  const container = app.getContainer();
   const dependencies = Object.keys(effectiveFactory[INJECT]).reduce((acc, id) => {
     acc[effectiveFactory[INJECT][id]] = container.get(id);
     return acc;
-  }, {});
+  }, { pbjx: app.getPbjx() });
 
   return { delegate: effectiveFactory(dispatch, ownProps, dependencies) };
 };
