@@ -1,6 +1,6 @@
 {
   "name": "@triniti/app",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Lightweight container for redux + pbjx app.",
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
     "@gdbots/common": "^0.1.0",
     "@gdbots/pbj": "^0.2.3",
     "@gdbots/pbjx": "^0.1.7",
-    "@gdbots/schemas": "^1.4.3",
+    "@gdbots/schemas": "^1.4.4",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",

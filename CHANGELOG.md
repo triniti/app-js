@@ -1,6 +1,10 @@
 # CHANGELOG
 
 
+## v0.4.2
+* Add suffix `SUFFIX_SUBMIT_FORM` so the redux form processing aligns closer to their lifecycle.
+
+
 ## v0.4.1
 * Fix invalid empty check on errors and warnings in `FormEvent`.
 

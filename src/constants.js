@@ -34,7 +34,8 @@ export const actionTypes = {
 export const SUFFIX_INIT_FORM = 'init_form';
 export const SUFFIX_WARN_FORM = 'warn_form';
 export const SUFFIX_VALIDATE_FORM = 'validate_form';
-export const SUFFIX_BIND_FORM = 'bind_form';
+export const SUFFIX_BIND_FORM = 'submit_form'; // deprecated, use SUFFIX_SUBMIT_FORM
+export const SUFFIX_SUBMIT_FORM = 'submit_form';
 
 /**
  * The Ioc middleware in "createInjectMiddleware.js" requires that a
