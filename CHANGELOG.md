@@ -1,6 +1,11 @@
 # CHANGELOG
 
 
+## v0.4.3
+* Add serviceId `REDUX_LOGGER_PREDICATE` which can be used to filter/blacklist actions from redux logger.
+* Add dispatch to returned object from `createDelegateFactory`.
+
+
 ## v0.4.2
 * Add suffix `SUFFIX_SUBMIT_FORM` so the redux form processing aligns closer to their lifecycle.
 

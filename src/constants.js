@@ -14,6 +14,7 @@ export const serviceIds = {
   CONTAINER: t('container'),
   DISPATCHER: t('dispatcher'),
   REDUX_STORE: t('redux/store'),
+  REDUX_LOGGER_PREDICATE: t('redux/logger_predicate'),
 };
 
 /**

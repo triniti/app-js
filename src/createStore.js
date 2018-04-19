@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import camelCase from 'lodash/camelCase';
 import { applyMiddleware, combineReducers, compose, createStore as createReduxStore } from 'redux';
 import { serviceIds as pbjxServiceIds } from '@gdbots/pbjx/constants';
@@ -6,7 +7,7 @@ import reduceReducers from '@gdbots/pbjx/redux/reduceReducers';
 import { reducer as formReducer } from 'redux-form';
 import createSagaMiddleware from 'redux-saga';
 import { all, fork } from 'redux-saga/effects';
-import logger from 'redux-logger';
+import { createLogger } from 'redux-logger';
 import createInjectMiddleware from './createInjectMiddleware';
 import createInterceptorMiddleware from './createInterceptorMiddleware';
 import { serviceIds } from './constants';
@@ -52,13 +53,18 @@ export default (app, bottle, preloadedState) => {
     middlewares.push(sagaMiddleware);
   }
 
+  const loggerPredicate = container.has(serviceIds.REDUX_LOGGER_PREDICATE)
+    ? container.get(serviceIds.REDUX_LOGGER_PREDICATE)
+    : () => true;
+
   if (!container.get('is_production')) {
-    middlewares.push(logger);
+    middlewares.push(createLogger({ predicate: loggerPredicate }));
   }
 
   // for chrome / ff extensions setup
-  // eslint-disable-next-line no-underscore-dangle
-  const composer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ predicate: loggerPredicate })
+    : compose;
   const enhancer = composer(applyMiddleware(...middlewares));
   const store = createReduxStore(rootReducer, preloadedState, enhancer);
   bottle.factory(serviceIds.REDUX_STORE, () => store);

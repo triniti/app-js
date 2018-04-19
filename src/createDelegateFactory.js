@@ -25,7 +25,7 @@ export default factory => (dispatch, ownProps) => {
   const app = getInstance();
 
   if (!effectiveFactory[INJECT]) {
-    return { delegate: effectiveFactory(dispatch, ownProps, { pbjx: app.getPbjx() }) };
+    return { dispatch, delegate: effectiveFactory(dispatch, ownProps, { pbjx: app.getPbjx() }) };
   }
 
   const container = app.getContainer();
@@ -34,5 +34,5 @@ export default factory => (dispatch, ownProps) => {
     return acc;
   }, { pbjx: app.getPbjx() });
 
-  return { delegate: effectiveFactory(dispatch, ownProps, dependencies) };
+  return { dispatch, delegate: effectiveFactory(dispatch, ownProps, dependencies) };
 };
