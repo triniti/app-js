@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import Plugin from '../../src/Plugin';
 import { actionTypes } from '../../src/constants';
+import TestFormReducers from './TestFormReducers';
 
 export default class TestPlugin extends Plugin {
   constructor() {
@@ -16,6 +17,7 @@ export default class TestPlugin extends Plugin {
     this.reducer = (prevState = {}, action) => (
       { ...prevState, lastAction: action.type }
     );
+    this.formReducers = TestFormReducers;
   }
 
   onAppStarted() {

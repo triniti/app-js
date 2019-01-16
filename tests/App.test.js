@@ -48,7 +48,10 @@ test('App tests', (t) => {
     app.getStore().getState(),
     {
       test: { lastAction: actionTypes.APP_STARTED },
-      form: {},
+      form: {
+        testForm1: { values: { fieldNeedClear: 'not cleared' } },
+        testForm2: { values: { oldField: 'old value' } },
+      },
     },
     'Redux state should match.',
   );
@@ -113,6 +116,51 @@ test('App global instance tests', (t) => {
   t.same(getInstance(), app, 'app instance should be the same');
   setInstance(null);
   t.false(hasInstance(), 'hasInstance should be false again.');
+
+  t.end();
+});
+
+test('App store tests', (t) => {
+  const app = createApp();
+  const testPlugin = app.getPlugins().pop();
+  const store = app.getStore();
+
+  t.true(testPlugin.hasFormReducers(), 'it should detect formreducerPlugins property');
+  t.same(Object.keys(testPlugin.getFormReducers()), ['testForm1', 'testForm2'], 'it should have 2 form reducer plugins');
+  t.same(
+    store.getState().form,
+    {
+      testForm1: { values: { fieldNeedClear: 'not cleared' } },
+      testForm2: { values: { oldField: 'old value' } },
+    },
+    'It should have init form state',
+  );
+
+  const action = { type: 'CLEAR_ACTION' };
+  store.dispatch(action);
+
+  t.same(
+    app.getStore().getState().form.testForm1,
+    {
+      values: {
+        fieldNeedClear: 'cleared',
+      },
+      registeredFields: {
+        fieldNeedClear: 'cleared',
+      },
+    },
+    'form state should be updated accordingly',
+  );
+
+  t.same(
+    app.getStore().getState().form.testForm2,
+    {
+      values: {
+        oldField: 'old value',
+      },
+    },
+    'other form state should not be updated',
+  );
 
   t.end();
 });

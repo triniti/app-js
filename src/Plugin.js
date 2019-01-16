@@ -45,6 +45,12 @@ export default class Plugin extends EventSubscriber {
     this.reducer = null;
 
     /**
+     * @link https://redux-form.com/8.1.0/docs/api/reducerplugin.md/
+     * @type {Object}
+     */
+    this.formReducers = {};
+
+    /**
      * @link https://redux-saga.js.org/
      * @type {?Function}
      */
@@ -91,6 +97,20 @@ export default class Plugin extends EventSubscriber {
    */
   getReducer() {
     return this.reducer;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  hasFormReducers() {
+    return Object.keys(this.formReducers).length > 0;
+  }
+
+  /**
+   * @returns {object}
+   */
+  getFormReducers() {
+    return this.formReducers;
   }
 
   /**

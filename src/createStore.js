@@ -23,10 +23,15 @@ export default (app, bottle, preloadedState) => {
   const container = app.getContainer();
   const reducers = {};
   const sagas = [];
+  let formReducers = {};
 
   app.getPlugins().forEach((plugin) => {
     if (plugin.hasReducer()) {
       reducers[camelCase(plugin.getName())] = plugin.getReducer();
+    }
+
+    if (plugin.hasFormReducers()) {
+      formReducers = Object.assign({}, formReducers, plugin.getFormReducers());
     }
 
     if (plugin.hasSaga()) {
@@ -34,7 +39,10 @@ export default (app, bottle, preloadedState) => {
     }
   });
 
-  reducers.form = formReducer;
+  // setup redux-form reducers
+  reducers.form = Object.keys(formReducers).length
+    ? formReducer.plugin(formReducers)
+    : formReducer;
 
   const pbjxReducer = container.get(pbjxServiceIds.REDUX_REDUCER);
   const rootReducer = Object.keys(reducers).length

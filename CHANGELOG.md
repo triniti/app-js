@@ -1,6 +1,10 @@
 # CHANGELOG
 
 
+## v0.4.4
+* Add redux-form reducer-plugin hook.
+
+
 ## v0.4.3
 * Add serviceId `REDUX_LOGGER_PREDICATE` which can be used to filter/blacklist actions from redux logger.
 * Add dispatch to returned object from `createDelegateFactory`.
